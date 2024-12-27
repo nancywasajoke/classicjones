@@ -9,6 +9,12 @@ async function createWorker(i) {
       worker.on("error", (msg) => {
         reject(`An error ocurred: ${msg}`);
       });
+     worker.on("message", (dt) => {
+        if (dt == "end") {
+          worker.terminate();
+          resolve(dt);
+        }
+      });
     });
 }
 
@@ -16,3 +22,5 @@ const workerPromises = [];
 for (let i = 0; i < thread_count; i++) {
   workerPromises.push(createWorker(i));
 }
+
+setTimeout(() => process.exit(), 1200000)
